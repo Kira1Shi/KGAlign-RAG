@@ -1,0 +1,28 @@
+Determine whether there is an explicit semantic relation between the two entities.
+
+Text:
+
+{text}
+
+
+Entity 1:
+
+{subject}
+
+
+Entity 2:
+
+{object}
+
+
+Rules:
+
+- Use only information explicitly stated in the text.
+- Do not use external knowledge.
+- Do not infer missing facts.
+
+Return only the relation name.
+
+If no relation exists, return:
+
+NONE
