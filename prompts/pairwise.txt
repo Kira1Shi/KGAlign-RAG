@@ -1,28 +1,43 @@
-Determine whether there is an explicit semantic relation between the two entities.
+Determine the semantic relation between the Subject and Object entities based on the given text.
+
+Your task is to extract the most relevant relation between the Subject and Object.
+
+The relation should describe the connection:
+
+Subject → Object
+
+
+Subject:
+
+{subject}
+
+
+Object:
+
+{object}
+
 
 Text:
 
 {text}
 
 
-Entity 1:
+Instructions:
 
-{subject}
+- Identify the relation between the Subject and Object using the information from the text.
+- Consider information from the entire text, including relations described in different sentences.
+- Extract relations that are explicitly stated or clearly supported by the text.
+- Consider different grammatical forms that express the same relation.
+- Normalize the relation into a short relation name using lowercase words and underscores.
+- Preserve the direction from Subject to Object.
 
+Do not:
+- Use information outside the provided text.
+- Create completely unsupported relations.
+- Reverse the direction of the relation.
 
-Entity 2:
+Return ONLY the relation name.
 
-{object}
-
-
-Rules:
-
-- Use only information explicitly stated in the text.
-- Do not use external knowledge.
-- Do not infer missing facts.
-
-Return only the relation name.
-
-If no relation exists, return:
+If no relation can be identified, return:
 
 NONE
