@@ -1,0 +1,18 @@
+You are given a text and relational triples in the format [Subject, Relation, Object]. Write a general definition for every relation. Each definition must describe the semantic roles and preserve the order of subject and object.
+
+Example:
+Text: Alice was born in London and works for Acme.
+Triples: [['Alice', 'place_of_birth', 'London'], ['Alice', 'employee_of', 'Acme']]
+Relations: ['place_of_birth', 'employee_of']
+Answer:
+place_of_birth: The subject entity was born in the location specified by the object entity.
+employee_of: The subject entity works for the organization specified by the object entity.
+
+Now write the definitions for the following input.
+
+Text: {text}
+Triples: {triples}
+Relations: {relations}
+
+Return exactly one line per relation in the format:
+relation: definition

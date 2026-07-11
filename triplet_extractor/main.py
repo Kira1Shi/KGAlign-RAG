@@ -1,6 +1,17 @@
 from model import HuggingFaceChatModel
 from prompt_builder import PromptBuilder
 from extractor import RelationExtractor
+from canonicalizer import RelationCanonicalizer
+from canonicalization_prompt_builder import (
+    CanonicalizationPromptBuilder,
+    SchemaDefinitionPromptBuilder,
+)
+from schema_definer import RelationSchemaDefiner
+from config import (
+    CANONICALIZATION_EMBEDDING_MODEL,
+    CANONICALIZATION_TOP_K,
+)
+from sentence_transformers import SentenceTransformer
 
 
 
@@ -50,16 +61,71 @@ def main():
 
     print("Extracting relations...")
 
-    triples = extractor.extract(
+    raw_triples = extractor.extract(
         text=text,
         entities=entities
     )
 
-    print("\nExtracted triples:")
+    print("Loading relation canonicalizer...")
+
+    canonicalization_prompt_builder = CanonicalizationPromptBuilder(
+        template_path="../prompts/canonicalize_relation.txt"
+    )
+
+    schema_definition_prompt_builder = SchemaDefinitionPromptBuilder(
+        template_path="../prompts/define_relations.txt"
+    )
+
+    schema_definer = RelationSchemaDefiner(
+        model=model,
+        prompt_builder=schema_definition_prompt_builder,
+    )
+
+    embedder = SentenceTransformer(
+        CANONICALIZATION_EMBEDDING_MODEL
+    )
+
+    canonicalizer = RelationCanonicalizer(
+        model=model,
+        prompt_builder=canonicalization_prompt_builder,
+        embedder=embedder,
+        top_k=CANONICALIZATION_TOP_K,
+    )
+
+    relation_definitions = schema_definer.define(
+        text=text,
+        triples=raw_triples,
+    )
+
+    triples, relation_schema, mappings = canonicalizer.canonicalize(
+        text=text,
+        triples=raw_triples,
+        relation_definitions=relation_definitions,
+    )
+
+    print("\nRaw triples:")
+
+    for triple in raw_triples:
+
+        print(triple)
+
+    print("\nCanonical triples:")
 
     for triple in triples:
 
         print(triple)
+
+    print("\nRelation schema:")
+
+    for relation, definition in relation_schema.items():
+
+        print(f"{relation}: {definition}")
+
+    print("\nRelation mappings:")
+
+    for raw_relation, canonical_relation in mappings.items():
+
+        print(f"{raw_relation} -> {canonical_relation}")
 
 
 

@@ -17,3 +17,13 @@ TRIPLET_TEMPERATURE = 0.0
 TRIPLET_TOP_P = 1.0
 
 TRIPLET_DO_SAMPLE = False
+
+# ==========================================================
+# Relation Canonicalization
+# ==========================================================
+
+CANONICALIZATION_EMBEDDING_MODEL = (
+    "sentence-transformers/all-MiniLM-L6-v2"
+)
+
+CANONICALIZATION_TOP_K = 5
