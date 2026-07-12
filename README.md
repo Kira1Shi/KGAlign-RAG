@@ -18,6 +18,21 @@ python main.py
 
 ### Run Dataset Analysis
 
+#### Download Datasets
+
 ```bash
-python dataset_analysis/run_experiment.py
+mkdir -p data
+
+cd data
+
+git clone --depth 1 https://github.com/ParticleMedia/RAGTruth.git
+git clone --depth 1 https://github.com/google-research-datasets/xsum_hallucination_annotations.git
+
+cd ..
+```
+
+#### Run Analysis
+
+```bash
+python dataset_analysis/run_experiment.py extract_entities_method
 ```
