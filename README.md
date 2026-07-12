@@ -21,6 +21,3 @@ python main.py
 ```bash
 python dataset_analysis/run_experiment.py
 ```
-
-```
-```
