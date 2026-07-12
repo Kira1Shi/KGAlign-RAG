@@ -5,10 +5,14 @@ import statistics
 import sys
 import time
 
+sys.path.append(
+    os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+)
+
 from sklearn.metrics import roc_auc_score, average_precision_score
 
 from data import build_data
-from extractors import REGISTRY, get_extractor
+from graph_builder.entity_extractors import REGISTRY, get_extractor
 
 TASKS = ("Summary", "QA", "Data2txt")
 
