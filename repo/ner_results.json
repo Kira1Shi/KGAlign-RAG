@@ -1,0 +1,233 @@
+{
+ "spacy_sm": {
+  "n": 600,
+  "ctx_med": 23.0,
+  "ctx_mean": 23.9,
+  "ctx_below20": 36,
+  "ans_med": 7.0,
+  "ans_mean": 7.8,
+  "ans_empty": 6.2,
+  "kept": 563,
+  "dropped": 37,
+  "mean_eg": 0.675,
+  "auroc": 0.668,
+  "auprc": 0.532,
+  "per_task": {
+   "Summary": [
+    0.577,
+    193
+   ],
+   "QA": [
+    0.565,
+    157
+   ],
+   "Data2txt": [
+    0.569,
+    213
+   ]
+  },
+  "ms_per_ctx": 56,
+  "x_med": 2.0,
+  "x_mean": 1.8,
+  "x_empty": 17.0,
+  "x_below5": 97.8
+ },
+ "spacy_md": {
+  "n": 600,
+  "ctx_med": 22.0,
+  "ctx_mean": 23.1,
+  "ctx_below20": 40,
+  "ans_med": 7.0,
+  "ans_mean": 7.3,
+  "ans_empty": 6.0,
+  "kept": 564,
+  "dropped": 36,
+  "mean_eg": 0.692,
+  "auroc": 0.648,
+  "auprc": 0.503,
+  "per_task": {
+   "Summary": [
+    0.596,
+    193
+   ],
+   "QA": [
+    0.584,
+    158
+   ],
+   "Data2txt": [
+    0.563,
+    213
+   ]
+  },
+  "ms_per_ctx": 65,
+  "x_med": 2.0,
+  "x_mean": 2.2,
+  "x_empty": 9.8,
+  "x_below5": 93.0
+ },
+ "noun_chunks": {
+  "n": 600,
+  "ctx_med": 66.0,
+  "ctx_mean": 79.3,
+  "ctx_below20": 0,
+  "ans_med": 29.0,
+  "ans_mean": 31.3,
+  "ans_empty": 0.0,
+  "kept": 600,
+  "dropped": 0,
+  "mean_eg": 0.412,
+  "auroc": 0.779,
+  "auprc": 0.624,
+  "per_task": {
+   "Summary": [
+    0.654,
+    193
+   ],
+   "QA": [
+    0.721,
+    194
+   ],
+   "Data2txt": [
+    0.672,
+    213
+   ]
+  },
+  "ms_per_ctx": 63,
+  "x_med": 5.0,
+  "x_mean": 4.7,
+  "x_empty": 0.0,
+  "x_below5": 45.0
+ },
+ "nc_clean": {
+  "n": 600,
+  "ctx_med": 53.0,
+  "ctx_mean": 63.1,
+  "ctx_below20": 2,
+  "ans_med": 25.0,
+  "ans_mean": 26.5,
+  "ans_empty": 0.0,
+  "kept": 600,
+  "dropped": 0,
+  "mean_eg": 0.511,
+  "auroc": 0.801,
+  "auprc": 0.697,
+  "per_task": {
+   "Summary": [
+    0.615,
+    193
+   ],
+   "QA": [
+    0.778,
+    194
+   ],
+   "Data2txt": [
+    0.686,
+    213
+   ]
+  },
+  "ms_per_ctx": 67,
+  "x_med": 4.0,
+  "x_mean": 4.2,
+  "x_empty": 0.0,
+  "x_below5": 62.0
+ },
+ "content_nouns": {
+  "n": 600,
+  "ctx_med": 63.0,
+  "ctx_mean": 70.6,
+  "ctx_below20": 2,
+  "ans_med": 28.0,
+  "ans_mean": 29.0,
+  "ans_empty": 0.0,
+  "kept": 600,
+  "dropped": 0,
+  "mean_eg": 0.728,
+  "auroc": 0.813,
+  "auprc": 0.745,
+  "per_task": {
+   "Summary": [
+    0.637,
+    193
+   ],
+   "QA": [
+    0.787,
+    194
+   ],
+   "Data2txt": [
+    0.73,
+    213
+   ]
+  },
+  "ms_per_ctx": 57,
+  "x_med": 6.0,
+  "x_mean": 6.1,
+  "x_empty": 0.0,
+  "x_below5": 21.0
+ },
+ "hybrid": {
+  "n": 600,
+  "ctx_med": 68.0,
+  "ctx_mean": 79.5,
+  "ctx_below20": 0,
+  "ans_med": 30.0,
+  "ans_mean": 31.6,
+  "ans_empty": 0.0,
+  "kept": 600,
+  "dropped": 0,
+  "mean_eg": 0.546,
+  "auroc": 0.808,
+  "auprc": 0.729,
+  "per_task": {
+   "Summary": [
+    0.634,
+    193
+   ],
+   "QA": [
+    0.773,
+    194
+   ],
+   "Data2txt": [
+    0.715,
+    213
+   ]
+  },
+  "ms_per_ctx": 58,
+  "x_med": 5.0,
+  "x_mean": 5.5,
+  "x_empty": 0.0,
+  "x_below5": 26.5
+ },
+ "nltk_ne": {
+  "n": 100,
+  "ctx_med": 14.5,
+  "ctx_mean": 14.1,
+  "ctx_below20": 74,
+  "ans_med": 5.0,
+  "ans_mean": 5.0,
+  "ans_empty": 7.0,
+  "kept": 93,
+  "dropped": 7,
+  "mean_eg": 0.599,
+  "auroc": 0.616,
+  "auprc": 0.394,
+  "per_task": {
+   "Summary": [
+    0.568,
+    28
+   ],
+   "QA": [
+    0.603,
+    27
+   ],
+   "Data2txt": [
+    0.592,
+    38
+   ]
+  },
+  "ms_per_ctx": 9298,
+  "x_med": 0.0,
+  "x_mean": 0.0,
+  "x_empty": 98.2,
+  "x_below5": 100.0
+ }
+}
