@@ -277,11 +277,11 @@ def calculate_metrics(
     query = list(query_triples)
 
     return {
-        "EG": entity_grounding(answer, context, query),
-        "RP": relation_preservation(answer, context, query),
-        "SC": subgraph_connectivity(answer, context, query),
+        "EG": entity_grounding(answer, context),
+        "RP": relation_preservation(answer, context),
+        "SC": subgraph_connectivity(answer, context),
         "query_coverage": query_coverage(query, answer),
-        "path_support": path_support(answer, context, query),
+        "path_support": path_support(answer, context),
         "weighted_EG": weighted_entity_grounding(
             answer, context, query, entity_query_boost
         ),
