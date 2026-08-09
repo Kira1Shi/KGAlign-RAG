@@ -144,3 +144,12 @@ def write_graphs(graphs: Iterable[dict[str, Any]], path: Path) -> None:
     with path.open("w", encoding="utf-8") as file:
         for graph in graphs:
             file.write(json.dumps(graph, ensure_ascii=False) + "\n")
+
+
+def append_graphs(graphs: Iterable[dict[str, Any]], path: Path) -> None:
+    """Append graph pairs to a resumable JSONL checkpoint."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as file:
+        for graph in graphs:
+            file.write(json.dumps(graph, ensure_ascii=False) + "\n")
+        file.flush()

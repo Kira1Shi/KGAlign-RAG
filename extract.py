@@ -8,7 +8,7 @@ from typing import Any, Sequence
 import pandas as pd
 from tqdm.auto import tqdm
 
-from utils import TASKS, norm, read_graphs
+from utils import TASKS, append_graphs, norm, read_graphs
 
 
 MODEL_NAME = "knowledgator/gliner-relex-multi-v1.0"
@@ -346,6 +346,7 @@ def extract_graphs(
     model_name: str = MODEL_NAME,
     device: str | None = None,
     batch_size: int = DEFAULT_BATCH_SIZE,
+    checkpoint_path: Path | None = None,
 ) -> dict[str, Any]:
     """Construct one context graph and one response graph for every row."""
     required = {"sample_id", "task_type", "context", "response"}
@@ -354,29 +355,49 @@ def extract_graphs(
         raise ValueError(f"extraction frame is missing columns {missing}")
     if batch_size < 1:
         raise ValueError("batch_size must be positive")
-    extractor = GraphExtractor(model_name, device, batch_size)
+    sample_ids = set(frame.sample_id.astype(str))
     graphs: dict[str, Any] = {}
+    if checkpoint_path is not None and checkpoint_path.exists():
+        graphs = read_graphs(checkpoint_path, sample_ids)
+        print(f"Resuming graph extraction with {len(graphs)} completed examples")
+
+    extractor: GraphExtractor | None = None
     for task in TASKS:
         part = frame[frame["task_type"].eq(task)].reset_index(drop=True)
         if part.empty:
             continue
-        with tqdm(total=len(part), desc=f"Extract {task}", unit="examples") as bar:
-            for start in range(0, len(part), batch_size):
-                batch = part.iloc[start : start + batch_size]
+        completed_mask = part.sample_id.astype(str).isin(set(graphs))
+        completed = completed_mask.sum()
+        remaining = part[~completed_mask].reset_index(drop=True)
+        with tqdm(
+            total=len(part),
+            initial=completed,
+            desc=f"Extract {task}",
+            unit="examples",
+        ) as bar:
+            for start in range(0, len(remaining), batch_size):
+                if extractor is None:
+                    extractor = GraphExtractor(model_name, device, batch_size)
+                batch = remaining.iloc[start : start + batch_size]
                 context_graphs = extractor.extract_batch(batch["context"].tolist(), task)
                 response_graphs = extractor.extract_batch(batch["response"].tolist(), task)
+                completed_graphs = []
                 for row, context_graph, response_graph in zip(
                     batch.itertuples(index=False), context_graphs, response_graphs
                 ):
                     sample_id = str(row.sample_id)
                     if sample_id in graphs:
                         raise ValueError(f"duplicate sample_id during extraction: {sample_id}")
-                    graphs[sample_id] = {
+                    graph = {
                         "sample_id": sample_id,
                         "task_type": task,
                         "context_graph": context_graph,
                         "response_graph": response_graph,
                     }
+                    graphs[sample_id] = graph
+                    completed_graphs.append(graph)
+                if checkpoint_path is not None:
+                    append_graphs(completed_graphs, checkpoint_path)
                 bar.update(len(batch))
     return graphs
 
@@ -386,8 +407,14 @@ def get_graphs(
     graph_path: Path | None = None,
     device: str | None = None,
     batch_size: int = DEFAULT_BATCH_SIZE,
+    checkpoint_path: Path | None = None,
 ) -> dict[str, Any]:
     """Load precomputed graphs, or extract them when no graph file is given."""
     if graph_path is not None:
         return read_graphs(graph_path, set(frame.sample_id.astype(str)))
-    return extract_graphs(frame, device=device, batch_size=batch_size)
+    return extract_graphs(
+        frame,
+        device=device,
+        batch_size=batch_size,
+        checkpoint_path=checkpoint_path,
+    )

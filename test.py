@@ -7,7 +7,7 @@ import pandas as pd
 
 from extract import DEFAULT_BATCH_SIZE, get_graphs
 from model import coefficients, dataset_features, load_models, metrics, predict
-from utils import TASKS, read_split, write_graphs
+from utils import TASKS, read_split
 
 
 DEFAULT_PREDICT_BATCH_SIZE = 1024
@@ -26,9 +26,13 @@ def evaluate(
 ) -> None:
     """Evaluate saved models using the prepared test split."""
     test_rows = read_split(data_dir, "test")
-    graphs = get_graphs(test_rows, graph_path, device, extract_batch_size)
-    if save_graph_path is not None and graph_path is None:
-        write_graphs(graphs.values(), save_graph_path)
+    graphs = get_graphs(
+        test_rows,
+        graph_path,
+        device,
+        extract_batch_size,
+        save_graph_path,
+    )
 
     test_features = dataset_features(test_rows, graphs)
     models = load_models(model_dir / "models.joblib")

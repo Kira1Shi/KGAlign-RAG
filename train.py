@@ -15,7 +15,7 @@ from model import (
     fit_models,
     save_models,
 )
-from utils import TASKS, read_split, write_graphs
+from utils import TASKS, read_split
 
 
 def train(
@@ -28,9 +28,13 @@ def train(
 ) -> None:
     """Fit one model per task using the prepared training split."""
     train_rows = read_split(data_dir, "train")
-    graphs = get_graphs(train_rows, graph_path, device, extract_batch_size)
-    if save_graph_path is not None and graph_path is None:
-        write_graphs(graphs.values(), save_graph_path)
+    graphs = get_graphs(
+        train_rows,
+        graph_path,
+        device,
+        extract_batch_size,
+        save_graph_path,
+    )
 
     train_features = dataset_features(train_rows, graphs)
     models = fit_models(train_features)
