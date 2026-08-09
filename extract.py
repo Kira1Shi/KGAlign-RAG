@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import gc
+import warnings
 from pathlib import Path
 from typing import Any, Sequence
 
@@ -273,16 +275,61 @@ class GraphExtractor:
         self.model = GLiNER.from_pretrained(model_name, **kwargs)
         self.batch_size = batch_size
 
-    def extract_batch(self, texts: Sequence[str], task: str) -> list[dict[str, Any]]:
+    @staticmethod
+    def _is_cuda_oom(error: RuntimeError) -> bool:
+        return "cuda out of memory" in str(error).casefold()
+
+    @staticmethod
+    def _clear_cuda_cache() -> None:
+        gc.collect()
+        try:
+            import torch
+
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        except (ImportError, RuntimeError):
+            pass
+
+    def _inference(self, texts: Sequence[str], task: str) -> tuple[Any, Any]:
         labels, _ = relation_labels(task)
-        output = self.model.inference(
-            texts=list(texts),
-            labels=list(ENTITY_LABELS),
-            relations=labels,
-            relation_threshold=RELATION_THRESHOLDS[task],
-            batch_size=self.batch_size,
-            return_relations=True,
+        try:
+            return self.model.inference(
+                texts=list(texts),
+                labels=list(ENTITY_LABELS),
+                relations=labels,
+                relation_threshold=RELATION_THRESHOLDS[task],
+                batch_size=min(self.batch_size, len(texts)),
+                return_relations=True,
+            )
+        except RuntimeError as exc:
+            if not self._is_cuda_oom(exc):
+                raise
+            if len(texts) == 1:
+                raise RuntimeError(
+                    "CUDA ran out of memory while extracting one example. "
+                    "Free GPU memory or rerun with --device cpu."
+                ) from exc
+
+        smaller_batch_size = max(1, len(texts) // 2)
+        warnings.warn(
+            "CUDA ran out of memory during graph extraction; retrying the "
+            f"failed batch in chunks of at most {smaller_batch_size}.",
+            RuntimeWarning,
+            stacklevel=2,
         )
+        self._clear_cuda_cache()
+        entity_batches: list[Any] = []
+        relation_batches: list[Any] = []
+        for start in range(0, len(texts), smaller_batch_size):
+            entities, relations = self._inference(
+                texts[start : start + smaller_batch_size], task
+            )
+            entity_batches.extend(entities)
+            relation_batches.extend(relations)
+        return entity_batches, relation_batches
+
+    def extract_batch(self, texts: Sequence[str], task: str) -> list[dict[str, Any]]:
+        output = self._inference(texts, task)
         if not isinstance(output, tuple) or len(output) != 2:
             raise RuntimeError("GLiNER-Relex must return (entities, relations)")
         entity_batches, relation_batches = output
