@@ -26,9 +26,9 @@ Held-out performance:
 
 | Task | ROC AUC | PR AUC | Balanced accuracy | Recall | F1 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Data2Text | 0.749 | 0.825 | 0.721 | 0.717 | 0.772 |
+| Data2Txt | 0.749 | 0.825 | 0.721 | 0.717 | 0.772 |
 | QA | 0.743 | 0.454 | 0.666 | 0.652 | 0.475 |
-| RAGTruth Summary | 0.578 | 0.339 | 0.566 | 0.562 | 0.419 |
+| Summary | 0.578 | 0.339 | 0.566 | 0.562 | 0.419 |
 | XSum | 0.662 | 0.953 | 0.640 | 0.613 | 0.747 |
 
 ## Installation
